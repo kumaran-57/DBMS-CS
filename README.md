@@ -1,134 +1,364 @@
-# Ex1. Output
+# Ex
 
-## 1. Create Database
+## Objective
+
+To demonstrates how to create and manage a simple **University Database** using MySQL. It covers:
+
+- Creating a database
+- Creating tables with constraints
+- Defining Primary Keys and Foreign Keys
+- Using `ON DELETE CASCADE`
+- Inserting sample data
+- Viewing records
+- Deleting records
+- Dropping tables and database
+
+---
+
+# Step 1: Create Database
+
+## Command
+
 ```sql
-mysql> CREATE DATABASE COMPANY;
-Query OK, 1 row affected (0.01 sec)
+CREATE DATABASE IF NOT EXISTS university_db;
+USE university_db;
 ```
 
-## 2. Use Database
-```sql
-mysql> USE COMPANY;
+### Output
+
+```
+Query OK, 1 row affected
+
 Database changed
 ```
 
-## 3. Create EMPLOYEE Table
+---
+
+# Step 2: Create Students Table
+
+## Command
+
 ```sql
-mysql> CREATE TABLE EMPLOYEE (
-    Emp_no INT PRIMARY KEY,
-    E_name VARCHAR(50),
-    E_address VARCHAR(100),
-    E_ph_no VARCHAR(15),
-    Dept_no INT,
-    Dept_name VARCHAR(50),
-    Job_id CHAR(10),
-    Salary DECIMAL(10,2)
+CREATE TABLE students (
+    student_id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL UNIQUE
 );
-Query OK, 0 rows affected (0.03 sec)
-
-mysql> DESC EMPLOYEE;
-+-----------+---------------+------+-----+---------+-------+
-| Field     | Type          | Null | Key | Default | Extra |
-+-----------+---------------+------+-----+---------+-------+
-| Emp_no    | int           | NO   | PRI | NULL    |       |
-| E_name    | varchar(50)   | YES  |     | NULL    |       |
-| E_address | varchar(100)  | YES  |     | NULL    |       |
-| E_ph_no   | varchar(15)   | YES  |     | NULL    |       |
-| Dept_no   | int           | YES  |     | NULL    |       |
-| Dept_name | varchar(50)   | YES  |     | NULL    |       |
-| Job_id    | char(10)      | YES  |     | NULL    |       |
-| Salary    | decimal(10,2) | YES  |     | NULL    |       |
-+-----------+---------------+------+-----+---------+-------+
 ```
 
-## 4. Add HIREDATE Column
+### Output
+
+```
+Query OK, 0 rows affected
+```
+
+---
+
+# Step 3: Create Courses Table
+
+## Command
+
 ```sql
-mysql> ALTER TABLE EMPLOYEE ADD HIREDATE DATE;
-Query OK, 0 rows affected (0.10 sec)
-Records: 0  Duplicates: 0  Warnings: 0
+CREATE TABLE courses (
+    course_id INT AUTO_INCREMENT PRIMARY KEY,
+    course_name VARCHAR(100) NOT NULL,
+    credits INT NOT NULL,
+    CHECK (credits > 0 AND credits <= 6)
+);
 ```
 
-## 5. Modify JOB_ID Datatype
-```sql
-mysql> ALTER TABLE EMPLOYEE MODIFY Job_id VARCHAR(10);
-Query OK, 0 rows affected (0.09 sec)
-Records: 0  Duplicates: 0  Warnings: 0
+### Output
+
+```
+Query OK, 0 rows affected
 ```
 
-## 6. Rename Column
+---
+
+# Step 4: Create Enrollments Table
+
+## Command
+
 ```sql
-mysql> ALTER TABLE EMPLOYEE RENAME COLUMN Emp_no TO E_no;
-Query OK, 0 rows affected (0.06 sec)
-Records: 0  Duplicates: 0  Warnings: 0
+CREATE TABLE enrollments (
+    enrollment_id INT AUTO_INCREMENT PRIMARY KEY,
+    student_id INT NOT NULL,
+    course_id INT NOT NULL,
+    enrollment_date DATE NOT NULL DEFAULT (CURRENT_DATE),
+
+    FOREIGN KEY (student_id)
+        REFERENCES students(student_id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+
+    FOREIGN KEY (course_id)
+        REFERENCES courses(course_id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+
+    UNIQUE (student_id, course_id)
+);
 ```
 
-## 7. Modify Job_id Width
-```sql
-mysql> ALTER TABLE EMPLOYEE MODIFY Job_id VARCHAR(20);
-Query OK, 0 rows affected (0.01 sec)
-Records: 0  Duplicates: 0  Warnings: 0
+### Output
+
+```
+Query OK, 0 rows affected
 ```
 
-## 8. Add UNIQUE Constraint
+---
+
+# Step 5: Insert Data into Students
+
+## Command
+
 ```sql
-mysql> ALTER TABLE EMPLOYEE ADD CONSTRAINT UQ_E_ph_no UNIQUE (E_ph_no);
-Query OK, 0 rows affected (0.05 sec)
-Records: 0  Duplicates: 0  Warnings: 0
+INSERT INTO students (name, email)
+VALUES
+('Alice Johnson', 'alice@example.com'),
+('Bob Smith', 'bob@example.com');
 ```
 
-## 9. Add NOT NULL Constraint
-```sql
-mysql> ALTER TABLE EMPLOYEE MODIFY E_name VARCHAR(50) NOT NULL;
-Query OK, 0 rows affected (0.07 sec)
-Records: 0  Duplicates: 0  Warnings: 0
+### Output
+
+```
+Query OK, 2 rows affected
+Records: 2
+Duplicates: 0
+Warnings: 0
 ```
 
-## 10. Add CHECK Constraint
+### Verify
+
 ```sql
-mysql> ALTER TABLE EMPLOYEE ADD CONSTRAINT CHK_Salary CHECK (Salary > 0);
-Query OK, 0 rows affected (0.09 sec)
-Records: 0  Duplicates: 0  Warnings: 0
+SELECT * FROM students;
 ```
 
-## 11. Insert Records
+### Output
+
+| student_id | name | email |
+|------------|------|-------|
+| 1 | Alice Johnson | alice@example.com |
+| 2 | Bob Smith | bob@example.com |
+
+---
+
+# Step 6: Insert Data into Courses
+
+## Command
+
 ```sql
-mysql> SELECT * FROM EMPLOYEE;
-+------+---------------+--------------+----------+---------+------------+--------+----------+------------+
-| E_no | E_name        | E_address    | E_ph_no  | Dept_no | Dept_name  | Job_id | Salary   | HIREDATE   |
-+------+---------------+--------------+----------+---------+------------+--------+----------+------------+
-| 1    | John Doe      | 123 Main St  | 555-1234 | 101     | Sales      | J1001  | 50000.00 | 2024-08-20 |
-| 2    | Jane Smith    | 456 Oak St   | 555-5678 | 102     | Marketing  | J1002  | 60000.00 | 2018-06-04 |
-| 3    | Alice Johnson | 789 Pine St  | 555-9012 | 103     | HR         | J1003  | 55000.00 | 2015-07-04 |
-| 4    | Alice Bob     | 112 Apple St | 555-1112 | 104     | ADMIN      | J1004  | 45000.00 | 2015-03-04 |
-+------+---------------+--------------+----------+---------+------------+--------+----------+------------+
+INSERT INTO courses (course_name, credits)
+VALUES
+('Database Systems',3),
+('Computer Networks',4);
 ```
 
-## 12. Update Records
-```sql
-mysql> SELECT * FROM EMPLOYEE;
-+------+---------------+--------------+----------+---------+---------------------+--------+----------+------------+
-| E_no | E_name        | E_address    | E_ph_no  | Dept_no | Dept_name           | Job_id | Salary   | HIREDATE   |
-+------+---------------+--------------+----------+---------+---------------------+--------+----------+------------+
-| 1    | John Doe      | 123 Main St  | 555-1234 | 101     | Sales               | J1001  | 55000.00 | 2024-08-20 |
-| 2    | Jane Smith    | 456 Oak St   | 555-5678 | 102     | Digital Marketing   | J1002  | 60000.00 | 2018-06-04 |
-| 3    | Alice Johnson | 789 Pine St  | 555-9012 | 103     | HR                  | J1003  | 55000.00 | 2015-07-04 |
-| 4    | Alice Bob     | 112 Apple St | 555-1112 | 104     | ADMIN               | J1004  | 45000.00 | 2015-03-04 |
-+------+---------------+--------------+----------+---------+---------------------+--------+----------+------------+
+### Output
+
+```
+Query OK, 2 rows affected
+Records: 2
+Duplicates: 0
+Warnings: 0
 ```
 
-## 13. Delete Records
+### Verify
+
 ```sql
-mysql> SELECT * FROM EMPLOYEE;
-+------+------------+--------------+----------+---------+-------------------+--------+----------+------------+
-| E_no | E_name     | E_address    | E_ph_no  | Dept_no | Dept_name         | Job_id | Salary   | HIREDATE   |
-+------+------------+--------------+----------+---------+-------------------+--------+----------+------------+
-| 2    | Jane Smith | 456 Oak St   | 555-5678 | 102     | Digital Marketing | J1002  | 60000.00 | 2018-06-04 |
-| 4    | Alice Bob  | 112 Apple St | 555-1112 | 104     | ADMIN             | J1004  | 45000.00 | 2015-03-04 |
-+------+------------+--------------+----------+---------+-------------------+--------+----------+------------+
+SELECT * FROM courses;
 ```
 
-## 14. Truncate Table
+### Output
+
+| course_id | course_name | credits |
+|-----------|-------------|---------|
+| 1 | Database Systems | 3 |
+| 2 | Computer Networks | 4 |
+
+---
+
+# Step 7: Insert Data into Enrollments
+
+## Command
+
 ```sql
-mysql> SELECT * FROM EMPLOYEE;
-Empty set (0.00 sec)
+INSERT INTO enrollments (student_id, course_id)
+VALUES
+(1,1),
+(2,1),
+(1,2);
 ```
+
+### Output
+
+```
+Query OK, 3 rows affected
+Records: 3
+Duplicates: 0
+Warnings: 0
+```
+
+### Verify
+
+```sql
+SELECT * FROM enrollments;
+```
+
+### Output
+
+| enrollment_id | student_id | course_id | enrollment_date |
+|---------------|------------|-----------|-----------------|
+| 1 | 1 | 1 | 2025-08-07 |
+| 2 | 2 | 1 | 2025-08-07 |
+| 3 | 1 | 2 | 2025-08-07 |
+
+---
+
+# Step 8: Delete Student (Cascade Delete)
+
+## Command
+
+```sql
+DELETE FROM students
+WHERE student_id = 2;
+```
+
+### Output
+
+```
+Query OK, 1 row affected
+```
+
+Because of **ON DELETE CASCADE**, Bob's enrollment is automatically deleted.
+
+---
+
+# Step 9: Delete Course (Cascade Delete)
+
+## Command
+
+```sql
+DELETE FROM courses
+WHERE course_id = 2;
+```
+
+### Output
+
+```
+Query OK, 1 row affected
+```
+
+Because of **ON DELETE CASCADE**, enrollments for this course are automatically removed.
+
+### Verify Students
+
+```sql
+SELECT * FROM students;
+```
+
+### Output
+
+| student_id | name | email |
+|------------|------|-------|
+| 1 | Alice Johnson | alice@example.com |
+
+### Verify Courses
+
+```sql
+SELECT * FROM courses;
+```
+
+### Output
+
+| course_id | course_name | credits |
+|-----------|-------------|---------|
+| 1 | Database Systems | 3 |
+
+---
+
+# Step 10: Drop Tables
+
+## Command
+
+```sql
+DROP TABLE IF EXISTS enrollments;
+
+DROP TABLE IF EXISTS students;
+
+DROP TABLE IF EXISTS courses;
+```
+
+### Output
+
+```
+Query OK, 0 rows affected
+```
+
+---
+
+# Step 11: Drop Database
+
+## Command
+
+```sql
+DROP DATABASE university_db;
+```
+
+### Output
+
+```
+Query OK, 0 rows affected
+```
+
+---
+
+# Concepts Covered
+
+- Database Creation
+- Table Creation
+- Primary Key
+- Foreign Key
+- UNIQUE Constraint
+- CHECK Constraint
+- AUTO_INCREMENT
+- DEFAULT Value
+- ON DELETE CASCADE
+- ON UPDATE CASCADE
+- Data Insertion
+- Data Retrieval
+- Data Deletion
+- Dropping Tables
+- Dropping Database
+
+---
+
+# Final Database Structure
+
+```
+students
+│
+├── student_id (PK)
+├── name
+└── email
+
+courses
+│
+├── course_id (PK)
+├── course_name
+└── credits
+
+enrollments
+│
+├── enrollment_id (PK)
+├── student_id (FK)
+├── course_id (FK)
+└── enrollment_date
+```
+
+---
+**Author:** Your Name
+
+**Database:** MySQL
+
+**Project:** University Database Management System
