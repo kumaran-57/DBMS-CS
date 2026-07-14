@@ -357,8 +357,3 @@ enrollments
 ```
 
 ---
-**Author:** Your Name
-
-**Database:** MySQL
-
-**Project:** University Database Management System
