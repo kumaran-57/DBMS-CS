@@ -105,7 +105,7 @@ The exercise covers commonly used SQL concepts for beginners and database manage
 ---
 
 # Functions Used
-| ---------- | ----------------------------------- |
+
 | Function   | Purpose                             |
 | ---------- | ----------------------------------- |
 | COUNT()    | Counts records                      |
@@ -119,4 +119,3 @@ The exercise covers commonly used SQL concepts for beginners and database manage
 | DATEDIFF() | Calculates difference between dates |
 | LIKE       | Pattern matching                    |
 | IN         | Subquery filtering                  |
-| ---------- | ----------------------------------- |
