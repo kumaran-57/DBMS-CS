@@ -1,359 +1,122 @@
-# Ex 2
+## Ex 3
+# CyberDB - MySQL Aggregate Functions & Queries
 
-## Objective
+## 📌 Exercise Overview
 
-To demonstrates how to create and manage a simple **University Database** using MySQL. It covers:
+This exercise demonstrates the use of **MySQL Aggregate Functions**, **String Functions**, **Date Functions**, **Subqueries**, and **Grouping** by creating a simple Cyber Security Training Management database.
 
-- Creating a database
-- Creating tables with constraints
-- Defining Primary Keys and Foreign Keys
-- Using `ON DELETE CASCADE`
-- Inserting sample data
-- Viewing records
-- Deleting records
-- Dropping tables and database
+The database consists of two tables:
 
----
+* **Users** – Stores user information.
+* **Enrollments** – Stores course enrollment details.
 
-# Step 1: Create Database
-
-## Command
-
-```sql
-CREATE DATABASE IF NOT EXISTS university_db;
-USE university_db;
-```
-
-### Output
-
-```
-Query OK, 1 row affected
-
-Database changed
-```
+The exercise covers commonly used SQL concepts for beginners and database management coursework.
 
 ---
 
-# Step 2: Create Students Table
+# Database Schema
 
-## Command
+## Users Table
 
-```sql
-CREATE TABLE students (
-    student_id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
-    email VARCHAR(100) NOT NULL UNIQUE
-);
-```
-
-### Output
-
-```
-Query OK, 0 rows affected
-```
+| Column      | Data Type    | Description       |
+| ----------- | ------------ | ----------------- |
+| UserID      | INT          | Primary Key       |
+| FirstName   | VARCHAR(50)  | User's first name |
+| LastName    | VARCHAR(50)  | User's last name  |
+| Email       | VARCHAR(100) | Email address     |
+| DateOfBirth | DATE         | Date of birth     |
 
 ---
 
-# Step 3: Create Courses Table
+## Enrollments Table
 
-## Command
-
-```sql
-CREATE TABLE courses (
-    course_id INT AUTO_INCREMENT PRIMARY KEY,
-    course_name VARCHAR(100) NOT NULL,
-    credits INT NOT NULL,
-    CHECK (credits > 0 AND credits <= 6)
-);
-```
-
-### Output
-
-```
-Query OK, 0 rows affected
-```
+| Column       | Data Type    | Description                   |
+| ------------ | ------------ | ----------------------------- |
+| EnrollmentID | INT          | Primary Key (AUTO_INCREMENT)  |
+| CourseTitle  | VARCHAR(100) | Name of the course            |
+| Trainer      | VARCHAR(50)  | Trainer's name                |
+| UserID       | INT          | Foreign Key referencing Users |
 
 ---
 
-# Step 4: Create Enrollments Table
+# SQL Concepts Covered
 
-## Command
+## Aggregate Functions
 
-```sql
-CREATE TABLE enrollments (
-    enrollment_id INT AUTO_INCREMENT PRIMARY KEY,
-    student_id INT NOT NULL,
-    course_id INT NOT NULL,
-    enrollment_date DATE NOT NULL DEFAULT (CURRENT_DATE),
+* COUNT()
+* SUM()
+* AVG()
+* MAX()
+* MIN()
 
-    FOREIGN KEY (student_id)
-        REFERENCES students(student_id)
-        ON DELETE CASCADE
-        ON UPDATE CASCADE,
+## String Functions
 
-    FOREIGN KEY (course_id)
-        REFERENCES courses(course_id)
-        ON DELETE CASCADE
-        ON UPDATE CASCADE,
+* CONCAT()
+* UPPER()
+* LIKE
 
-    UNIQUE (student_id, course_id)
-);
-```
+## Date Functions
 
-### Output
+* NOW()
+* DATEDIFF()
 
-```
-Query OK, 0 rows affected
-```
+## Other SQL Concepts
 
----
-
-# Step 5: Insert Data into Students
-
-## Command
-
-```sql
-INSERT INTO students (name, email)
-VALUES
-('Alice Johnson', 'alice@example.com'),
-('Bob Smith', 'bob@example.com');
-```
-
-### Output
-
-```
-Query OK, 2 rows affected
-Records: 2
-Duplicates: 0
-Warnings: 0
-```
-
-### Verify
-
-```sql
-SELECT * FROM students;
-```
-
-### Output
-
-| student_id | name | email |
-|------------|------|-------|
-| 1 | Alice Johnson | alice@example.com |
-| 2 | Bob Smith | bob@example.com |
+* GROUP BY
+* Subqueries
+* FOREIGN KEY
+* AUTO_INCREMENT
+* Pattern Matching
+* Aliases using AS
 
 ---
 
-# Step 6: Insert Data into Courses
+# Queries Included
 
-## Command
+### Database Creation
 
-```sql
-INSERT INTO courses (course_name, credits)
-VALUES
-('Database Systems',3),
-('Computer Networks',4);
-```
+* Create Database
+* Select Database
 
-### Output
+### Table Creation
 
-```
-Query OK, 2 rows affected
-Records: 2
-Duplicates: 0
-Warnings: 0
-```
+* Users Table
+* Enrollments Table
 
-### Verify
+### Data Insertion
 
-```sql
-SELECT * FROM courses;
-```
+* Insert User Records
+* Insert Enrollment Records
 
-### Output
+### Aggregate Queries
 
-| course_id | course_name | credits |
-|-----------|-------------|---------|
-| 1 | Database Systems | 3 |
-| 2 | Computer Networks | 4 |
+* Count users born after a specific date
+* Calculate average Enrollment ID
+* Sum Enrollment IDs
+* Count enrolled courses per user
+* Find earliest date of birth
+* Count courses using subqueries
+* Average User ID for a course
+* Count trainer-wise courses
+* Find maximum User ID
+* Sum Enrollment IDs for users with names starting with 'J'
+* Display users in uppercase with calculated age
 
 ---
 
-# Step 7: Insert Data into Enrollments
-
-## Command
-
-```sql
-INSERT INTO enrollments (student_id, course_id)
-VALUES
-(1,1),
-(2,1),
-(1,2);
-```
-
-### Output
-
-```
-Query OK, 3 rows affected
-Records: 3
-Duplicates: 0
-Warnings: 0
-```
-
-### Verify
-
-```sql
-SELECT * FROM enrollments;
-```
-
-### Output
-
-| enrollment_id | student_id | course_id | enrollment_date |
-|---------------|------------|-----------|-----------------|
-| 1 | 1 | 1 | 2025-08-07 |
-| 2 | 2 | 1 | 2025-08-07 |
-| 3 | 1 | 2 | 2025-08-07 |
-
----
-
-# Step 8: Delete Student (Cascade Delete)
-
-## Command
-
-```sql
-DELETE FROM students
-WHERE student_id = 2;
-```
-
-### Output
-
-```
-Query OK, 1 row affected
-```
-
-Because of **ON DELETE CASCADE**, Bob's enrollment is automatically deleted.
-
----
-
-# Step 9: Delete Course (Cascade Delete)
-
-## Command
-
-```sql
-DELETE FROM courses
-WHERE course_id = 2;
-```
-
-### Output
-
-```
-Query OK, 1 row affected
-```
-
-Because of **ON DELETE CASCADE**, enrollments for this course are automatically removed.
-
-### Verify Students
-
-```sql
-SELECT * FROM students;
-```
-
-### Output
-
-| student_id | name | email |
-|------------|------|-------|
-| 1 | Alice Johnson | alice@example.com |
-
-### Verify Courses
-
-```sql
-SELECT * FROM courses;
-```
-
-### Output
-
-| course_id | course_name | credits |
-|-----------|-------------|---------|
-| 1 | Database Systems | 3 |
-
----
-
-# Step 10: Drop Tables
-
-## Command
-
-```sql
-DROP TABLE IF EXISTS enrollments;
-
-DROP TABLE IF EXISTS students;
-
-DROP TABLE IF EXISTS courses;
-```
-
-### Output
-
-```
-Query OK, 0 rows affected
-```
-
----
-
-# Step 11: Drop Database
-
-## Command
-
-```sql
-DROP DATABASE university_db;
-```
-
-### Output
-
-```
-Query OK, 0 rows affected
-```
-
----
-
-# Concepts Covered
-
-- Database Creation
-- Table Creation
-- Primary Key
-- Foreign Key
-- UNIQUE Constraint
-- CHECK Constraint
-- AUTO_INCREMENT
-- DEFAULT Value
-- ON DELETE CASCADE
-- ON UPDATE CASCADE
-- Data Insertion
-- Data Retrieval
-- Data Deletion
-- Dropping Tables
-- Dropping Database
-
----
-
-# Final Database Structure
-
-```
-students
-│
-├── student_id (PK)
-├── name
-└── email
-
-courses
-│
-├── course_id (PK)
-├── course_name
-└── credits
-
-enrollments
-│
-├── enrollment_id (PK)
-├── student_id (FK)
-├── course_id (FK)
-└── enrollment_date
-```
-
----
+# Functions Used
+| ---------- | ----------------------------------- |
+| Function   | Purpose                             |
+| ---------- | ----------------------------------- |
+| COUNT()    | Counts records                      |
+| SUM()      | Adds values                         |
+| AVG()      | Calculates average                  |
+| MAX()      | Finds maximum value                 |
+| MIN()      | Finds minimum value                 |
+| CONCAT()   | Joins strings                       |
+| UPPER()    | Converts text to uppercase          |
+| NOW()      | Returns current date and time       |
+| DATEDIFF() | Calculates difference between dates |
+| LIKE       | Pattern matching                    |
+| IN         | Subquery filtering                  |
+| ---------- | ----------------------------------- |
