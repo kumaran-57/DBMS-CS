@@ -1,4 +1,4 @@
-## Ex 3
+## Ex 01
 # SQL DDL and DML Commands – MySQL
 
 ## 📌 Overview
