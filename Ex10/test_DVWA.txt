@@ -1,0 +1,17 @@
+curl -c dvwa_cookies.txt http://localhost/login.php -s -o login_page.html
+TOKEN=$(grep -oP "user_token' value='\K[^']+" login_page.html)
+echo "Token: $TOKEN"
+
+curl -b dvwa_cookies.txt -c dvwa_cookies.txt \
+  -d "username=admin&password=password&user_token=$TOKEN&Login=Login" \
+  http://localhost/login.php -L -o /dev/null -s -w "%{url_effective}\n"
+
+
+
+curl -b dvwa_cookies.txt http://localhost/security.php -s -o sec_page.html
+SEC_TOKEN=$(grep -oP "user_token' value='\K[^']+" sec_page.html)
+curl -b dvwa_cookies.txt -c dvwa_cookies.txt \
+  -d "security=low&seclev_submit=Submit&user_token=$SEC_TOKEN" \
+  http://localhost/security.php -L -o /dev/null -s
+
+curl -b dvwa_cookies.txt "http://localhost/vulnerabilities/sqli/?id=1&Submit=Submit" -s | grep -i -E "first name|surname"
