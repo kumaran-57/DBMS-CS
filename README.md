@@ -1,411 +1,178 @@
-## Ex 01
-# SQL DDL and DML Commands – MySQL
+# DBMS Lab
 
-## 📌 Overview
+## 1. DDL and DML Commands
 
-This exercise demonstrates the implementation of **Data Definition Language (DDL)** and **Data Manipulation Language (DML)** commands in MySQL. It covers creating a database and table, modifying table structures, inserting records, updating data, deleting records, and truncating tables.
+**Concept:** DDL changes the database structure, while DML works with the data inside tables.
 
----
+- **DDL:** `CREATE`, `ALTER`, `DROP`, `TRUNCATE`
+- **DML:** `INSERT`, `UPDATE`, `DELETE`
 
-## 🎯 Objective
+**Exercise:** Create an `EMPLOYEE` table, modify it, insert records, update records, delete records, and finally truncate the table.
 
-* Create and manage a database using SQL.
-* Learn the usage of DDL commands (`CREATE`, `ALTER`, `DROP`, `TRUNCATE`).
-* Learn the usage of DML commands (`INSERT`, `UPDATE`, `DELETE`).
-* Understand the output generated after executing each command.
+**In simple words:** DDL builds the table; DML manages the data.  
 
 ---
 
-## 🛠 Prerequisites
+## 2. Foreign Key and Referential Integrity
 
-* MySQL Server
-* MySQL Command Line Client or MySQL Workbench
+**Concept:** A foreign key connects two tables and keeps their relationship correct.
 
----
+- A **primary key** uniquely identifies a row.
+- A **foreign key** refers to a key in another table.
+- `ON DELETE CASCADE` can automatically remove related records.
 
-# Commands and Output
+**Exercise:** Create `students`, `courses`, and `enrollments` tables and connect them using foreign keys.
 
-## 1. Create Database
-
-### Command
-
-```sql
-CREATE DATABASE COMPANY;
-```
-
-### Description
-
-Creates a new database named **COMPANY**.
-
-### Output
-
-```
-Query OK, 1 row affected
-```
+**In simple words:** Foreign keys make sure related data stays connected and valid.  
 
 ---
 
-## 2. Select the Database
+## 3. Aggregate Functions
 
-### Command
+**Concept:** Aggregate functions calculate useful results from many rows.
 
-```sql
-USE COMPANY;
-```
+Main functions:
 
-### Description
+- `COUNT()` → counts rows
+- `SUM()` → adds values
+- `AVG()` → finds the average
+- `MAX()` → finds the highest value
+- `MIN()` → finds the lowest value
 
-Switches to the COMPANY database.
+The exercise also uses functions such as `NOW()`, `DATEDIFF()`, `CONCAT()`, `UPPER()`, and `LOWER()`.
 
-### Output
-
-```
-Database changed
-```
+**In simple words:** Aggregate functions summarize lots of data into one useful result.  
 
 ---
 
-## 3. Create Employee Table
+## 4. Subqueries and Simple Joins
 
-### Command
+**Concept:** A subquery is a query inside another query. A join combines related data from different tables.
 
-```sql
-CREATE TABLE EMPLOYEE (
-    Emp_no INT PRIMARY KEY,
-    E_name VARCHAR(50),
-    E_address VARCHAR(100),
-    E_ph_no VARCHAR(15),
-    Dept_no INT,
-    Dept_name VARCHAR(50),
-    Job_id CHAR(10),
-    Salary DECIMAL(10,2)
-);
-```
+Common joins used here:
 
-### Description
+- `INNER JOIN`
+- `LEFT JOIN`
+- `RIGHT JOIN`
+- `FULL JOIN`
 
-Creates an EMPLOYEE table with employee details.
+**Exercise:** Use subqueries and joins to retrieve related information from database tables.
 
-### Output
-
-```
-Query OK, 0 rows affected
-```
+**In simple words:** A subquery asks a question inside another question; a join brings related tables together.  
 
 ---
 
-## 4. Describe Table
+## 5. Natural, Equi and Outer Joins
 
-### Command
+**Concept:** Different joins are used to combine tables in different ways.
 
-```sql
-DESCRIBE EMPLOYEE;
-```
+- **Natural Join:** joins columns having the same name and data type.
+- **Equi Join:** joins tables using an equality condition.
+- **Outer Join:** keeps unmatched rows too.
+- **Left Join:** keeps all left-table rows.
+- **Right Join:** keeps all right-table rows.
+- **Full Outer Join:** keeps rows from both sides.
 
-### Description
-
-Displays the table structure.
-
-### Output
-
-Shows:
-
-* Column names
-* Data types
-* Constraints
-* NULL status
-* Keys
+**In simple words:** Joins help us see related information stored in separate tables.  
 
 ---
 
-## 5. Add a New Column
+## 6. User-Defined Functions and Stored Procedures
 
-### Command
+**Concept:** Functions and procedures store reusable SQL/PL/SQL logic.
 
-```sql
-ALTER TABLE EMPLOYEE
-ADD HIREDATE DATE;
-```
+- **Function:** performs a task and returns a value.
+- **Procedure:** performs a sequence of operations.
+- **View:** acts like a virtual table for simplifying queries.
 
-### Description
+**Exercise:** Create functions, views, and procedures and execute them using database data.
 
-Adds a new column named **HIREDATE**.
-
-### Output
-
-```
-Query OK
-```
+**In simple words:** Write the logic once and reuse it whenever needed.  
 
 ---
 
-## 6. Modify Column Data Type
+## 7. DCL and TCL Commands
 
-### Command
+**Concept:** DCL controls user permissions, while TCL controls transactions.
 
-```sql
-ALTER TABLE EMPLOYEE
-MODIFY Job_id VARCHAR(10);
-```
+### DCL
+- `GRANT` → gives permission
+- `REVOKE` → removes permission
 
-### Description
+### TCL
+- `COMMIT` → permanently saves changes
+- `ROLLBACK` → cancels changes
+- `SAVEPOINT` → creates a point to roll back to
 
-Changes the Job_id data type from CHAR to VARCHAR.
-
-### Output
-
-```
-Query OK
-```
+**In simple words:** DCL manages **who can access data**, while TCL manages **how changes are saved or undone**.  
 
 ---
 
-## 7. Rename a Column
+## 8. Triggers
 
-### Command
+**Concept:** A trigger is automatically executed when a specific database event happens.
 
-```sql
-ALTER TABLE EMPLOYEE
-RENAME COLUMN Emp_no TO E_no;
-```
+Triggers can be used with:
 
-### Description
+- `INSERT`
+- `UPDATE`
+- `DELETE`
 
-Renames **Emp_no** to **E_no**.
+**Exercise:** Create triggers for a `Products` table, such as checking product price before insertion and recording changes in logs.
 
-### Output
-
-```
-Query OK
-```
+**In simple words:** A trigger is an automatic action that runs when something happens in a table.  
 
 ---
 
-## 8. Modify Column Size
+## 9. Authentication Bypass Using SQL Injection
 
-### Command
+**Concept:** SQL Injection (SQLi) happens when unsafe user input is treated as part of an SQL query.
 
-```sql
-ALTER TABLE EMPLOYEE
-MODIFY Job_id VARCHAR(20);
-```
+**Exercise:** The manual demonstrates SQLi concepts and database discovery using `sqlmap`.
 
-### Description
+**In simple words:** Poorly protected SQL queries can allow unwanted database actions.
 
-Increases the maximum length of Job_id.
-
-### Output
-
-```
-Query OK
-```
+**Safety:** Practice SQL injection only on systems you own or are explicitly authorized to test.  
 
 ---
 
-## 9. Add Unique Constraint
+## 10. Defending Against SQL Injection
 
-### Command
+**Concept:** SQL injection can be prevented by separating user input from SQL code.
 
-```sql
-ALTER TABLE EMPLOYEE
-ADD CONSTRAINT UQ_E_ph_no
-UNIQUE(E_ph_no);
-```
+The exercise uses **prepared statements**:
 
-### Description
+1. `prepare()` → creates the SQL template.
+2. `bind_param()` → safely supplies user input.
+3. `execute()` → runs the prepared query.
 
-Ensures that phone numbers are unique.
-
-### Output
-
-```
-Query OK
-```
+**In simple words:** Never directly mix user input into an SQL query; use prepared statements.  
 
 ---
 
-## 10. Add NOT NULL Constraint
+## 11. Encryption and Decryption
 
-### Command
+**Concept:** Encryption converts readable data into protected data. Decryption converts it back when the correct key is available.
 
-```sql
-ALTER TABLE EMPLOYEE
-MODIFY E_name VARCHAR(50) NOT NULL;
-```
+**Exercise:** Store encrypted data using AES and retrieve it through decryption. The manual also demonstrates hashing with encrypted messages.
 
-### Description
-
-Prevents NULL values in the employee name column.
-
-### Output
-
-```
-Query OK
-```
+**In simple words:** Encryption protects data so unauthorized people cannot easily read it.  
 
 ---
 
-## 11. Add CHECK Constraint
+## 12. Role-Based Access Control (RBAC)
 
-### Command
+**Concept:** RBAC gives database permissions based on a user's role.
 
-```sql
-ALTER TABLE EMPLOYEE
-ADD CONSTRAINT CHK_Salary
-CHECK (Salary > 0);
-```
+Basic steps:
 
-### Description
+1. Create a **role**.
+2. Give privileges to the role.
+3. Create a user.
+4. Assign the role to the user.
 
-Ensures salary is always greater than zero.
+**Exercise:** Create roles and users and control access to database objects such as tables and reports.
 
-### Output
-
-```
-Query OK
-```
+**In simple words:** Users get access according to their job or role.  
 
 ---
-
-## 12. Insert Records
-
-### Command
-
-```sql
-INSERT INTO EMPLOYEE (...)
-VALUES (...);
-```
-
-### Description
-
-Adds employee records into the table.
-
-### Output
-
-```
-Query OK, 1 row affected
-```
-
-### Verify
-
-```sql
-SELECT * FROM EMPLOYEE;
-```
-
-### Output
-
-Displays all inserted employee records.
-
----
-
-## 13. Update Records
-
-### Command
-
-```sql
-UPDATE EMPLOYEE
-SET Salary = 55000
-WHERE E_no = 1;
-```
-
-### Description
-
-Updates the salary of a specific employee.
-
-### Output
-
-```
-Query OK
-Rows matched: 1
-Changed: 1
-```
-
-### Update Multiple Records
-
-```sql
-UPDATE EMPLOYEE
-SET Dept_name='Digital Marketing'
-WHERE Dept_no=102;
-```
-
-### Output
-
-Updates all matching rows.
-
----
-
-## 14. Delete Records
-
-### Delete a Single Record
-
-```sql
-DELETE FROM EMPLOYEE
-WHERE E_no = 3;
-```
-
-### Output
-
-```
-Query OK
-1 row affected
-```
-
-### Delete Multiple Records
-
-```sql
-DELETE FROM EMPLOYEE
-WHERE Dept_no = 101;
-```
-
-### Output
-
-```
-Query OK
-```
-
----
-
-## 15. Truncate Table
-
-### Command
-
-```sql
-TRUNCATE TABLE EMPLOYEE;
-```
-
-### Description
-
-Removes all rows while keeping the table structure intact.
-
-### Output
-
-```
-Query OK
-```
-
-### Verify
-
-```sql
-SELECT * FROM EMPLOYEE;
-```
-
-### Output
-
-```
-Empty set
-```
-
----
-
-# SQL Commands Summary
-
-| Command  | Purpose                          |
-| -------- | -------------------------------- |
-| CREATE   | Creates databases and tables     |
-| ALTER    | Modifies table structure         |
-| INSERT   | Adds new records                 |
-| UPDATE   | Updates existing records         |
-| DELETE   | Deletes selected records         |
-| TRUNCATE | Removes all records from a table |
-| DESCRIBE | Displays table schema            |
-| SELECT   | Retrieves table data             |
