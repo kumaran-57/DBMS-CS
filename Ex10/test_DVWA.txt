@@ -16,4 +16,4 @@ curl -b dvwa_cookies.txt -c dvwa_cookies.txt \
 
 curl -b dvwa_cookies.txt "http://localhost/vulnerabilities/sqli/?id=1&Submit=Submit" -s | grep -i -E "first name|surname"
 
-export COOKIE="$(awk '$6=="PHPSESSID"{printf "PHPSESSID=%s; ",$7} $6=="security"{print "security="$7}' dvwa_cookies.txt | tail -1)"
+export COOKIE="$(awk '$6=="PHPSESSID"{printf "PHPSESSID=%s; ",$7} $6=="security"{printf "security=%s; ", $7}' dvwa_cookies.txt | tail -1)"
